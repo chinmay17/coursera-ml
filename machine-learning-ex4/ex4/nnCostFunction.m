@@ -51,6 +51,35 @@ J = J/m;
 
 J = J + regularizationCost(Theta1, Theta2, lambda, m);
 
+
+% ============== Backpropagation ============== %
+
+for i = 1:m
+  a_1 = [1; X(i, :)']; % n+1 x 1
+  z_2 = Theta1 * a_1; % 25 x n+1 * n+1 x 1 = 25 x 1
+  a_2 = [1; sigmoid(z_2)]; % 26 x 1
+  z_3 = Theta2 * a_2; % 10 x 26 * 26 X 1 = 10 x 1
+  a_3 = sigmoid(z_3);
+  delta_3 = a_3 - YConv(i, :)'; % 10 x 1
+  delta_2 = (Theta2' * delta_3) .* sigmoidGradient([1;z_2]); % 26 x 1
+  delta_2 = delta_2(2:end); % 25 x 1
+  Theta2_grad = Theta2_grad + ( delta_3 * a_2' ); % 10 x 26
+  Theta1_grad = Theta1_grad + ( delta_2 * a_1' ); % 25 x n+1
+end
+
+Theta2_grad = (1 / m) * Theta2_grad;
+Theta1_grad = (1 / m) * Theta1_grad;
+
+Theta1_reg = (lambda / m) * Theta1;
+Theta1_reg(:, 1) = zeros(size(Theta1_reg, 1), 1);
+
+Theta2_reg = (lambda / m) * Theta2;
+Theta2_reg(:, 1) = zeros(size(Theta2_reg, 1), 1);
+
+Theta1_grad = Theta1_grad + Theta1_reg;
+Theta2_grad = Theta2_grad + Theta2_reg;
+
+
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
 %               following parts.
