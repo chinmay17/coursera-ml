@@ -49,6 +49,8 @@ end
 
 J = J/m;
 
+J = J + regularizationCost(Theta1, Theta2, lambda, m);
+
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
 %               following parts.
